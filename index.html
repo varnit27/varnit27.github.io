@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Certificates — Varnit Chourasiya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f8f6;
+      --surface: #ffffff;
+      --border: #e5e5e2;
+      --border-strong: #d0d0cc;
+      --text-primary: #1a1a18;
+      --text-secondary: #6b6b66;
+      --text-muted: #9e9e98;
+      --accent: #2563eb;
+      --accent-bg: #eff6ff;
+      --accent-text: #1d4ed8;
+      --radius: 12px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--accent-bg);
+      color: var(--accent-text);
+      font-size: 22px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+      border: 2px solid var(--border);
+    }
+    /* ── To add a photo: replace the initials div above with: ──
+       <img src="your-photo.jpg" alt="Your Name" class="avatar" style="object-fit:cover"> */
+
+    .hero h1 { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+    .hero .tagline { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; }
+    .hero .subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 1.25rem; }
+
+    .hero-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .hero-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid var(--border-strong);
+      font-size: 12px; font-weight: 500; color: var(--text-secondary);
+      text-decoration: none; transition: border-color 0.15s, color 0.15s;
+    }
+    .hero-link:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-link svg { width: 14px; height: 14px; }
+
+    /* ── MAIN LAYOUT ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+    /* ── FILTERS ── */
+    .filter-bar {
+      display: flex; gap: 8px; padding: 1.25rem 0;
+      flex-wrap: wrap; align-items: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .filter-label { font-size: 12px; color: var(--text-muted); margin-right: 4px; }
+    .filter-btn {
+      padding: 5px 14px; border-radius: 20px;
+      border: 1px solid var(--border-strong);
+      font-size: 12px; font-weight: 500; color: var(--text-secondary);
+      cursor: pointer; background: transparent;
+      transition: all 0.15s; font-family: var(--font);
+    }
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active {
+      background: var(--accent-bg); color: var(--accent-text);
+      border-color: var(--accent);
+    }
+
+    /* ── COUNT ── */
+    .count-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1rem;
+    }
+    .count-label { font-size: 12px; color: var(--text-muted); }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .cert-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+
+    .cert-preview {
+      height: 130px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .cert-icon { width: 48px; height: 48px; }
+    .cert-badge {
+      position: absolute; top: 10px; right: 10px;
+      font-size: 10px; font-weight: 500;
+      padding: 3px 8px; border-radius: 20px;
+    }
+
+    .cert-body { padding: 14px; }
+    .cert-title {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px; line-height: 1.4;
+    }
+    .cert-issuer { font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; }
+    .cert-meta { display: flex; align-items: center; justify-content: space-between; }
+    .cert-date { font-size: 11px; color: var(--text-muted); }
+    .cert-action {
+      font-size: 11px; color: var(--accent);
+      display: flex; align-items: center; gap: 3px;
+      font-weight: 500;
+    }
+
+    /* ── EMPTY ── */
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center; padding: 3rem;
+      color: var(--text-muted); font-size: 14px;
+    }
+
+    /* ── ADD CARD ── */
+    .add-card {
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; padding: 2rem 1rem;
+      cursor: pointer; transition: background 0.15s;
+      text-decoration: none;
+      min-height: 200px;
+    }
+    .add-card:hover { background: rgba(0,0,0,0.02); }
+    .add-card span { font-size: 13px; color: var(--text-muted); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 100;
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 1.5rem; max-width: 440px; width: 100%;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 12px; right: 12px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 18px; line-height: 1;
+    }
+    .modal-preview {
+      height: 100px; border-radius: 8px; margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center; font-size: 40px;
+    }
+    .modal h2 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .modal .modal-issuer { font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; }
+    .modal-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent); color: white;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; text-decoration: none;
+    }
+    .modal-link:hover { opacity: 0.9; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 500px) {
+      .hero { padding: 2rem 1rem 1.5rem; }
+      .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HERO — Edit your name, tagline, and links
+  ═══════════════════════════════════════════ -->
+  <div class="hero">
+    <div class="avatar">VC</div>
+    <h1>Varnit Chourasiya</h1>
+    <p class="tagline">Full Stack Developer · Open to work</p>
+    <p class="subtitle">Certificates &amp; credentials</p>
+    <div class="hero-links">
+      <a class="hero-link" href="https://www.linkedin.com/in/varnit-chourasiya-544396334/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+      <a class="hero-link" href="https://github.com/varnit27" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <!-- <a class="hero-link" href="mailto:varnitchourasiya27@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        Email
+      </a> -->
+      <a class="hero-link" href="certificates/Resume.pdf" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Resume
+      </a>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ─── FILTER BAR ─── -->
+    <div class="filter-bar">
+      <span class="filter-label">Filter by</span>
+      <button class="filter-btn active" onclick="filter('all', this)">All</button>
+      <button class="filter-btn" onclick="filter('tech', this)">Tech</button>
+      <button class="filter-btn" onclick="filter('design', this)">Design</button>
+      <button class="filter-btn" onclick="filter('data', this)">Data</button>
+      <button class="filter-btn" onclick="filter('cloud', this)">Cloud</button>
+      <button class="filter-btn" onclick="filter('other', this)">Other</button>
+    </div>
+
+    <div class="count-row">
+      <span class="count-label" id="count-label"></span>
+    </div>
+
+    <!-- ─── CERTIFICATE GRID ─── -->
+    <div class="grid" id="cert-grid"></div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL — pops up when a cert is clicked
+  ═══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal(true)" aria-label="Close">✕</button>
+      <div class="modal-preview" id="modal-preview"></div>
+      <h2 id="modal-title"></h2>
+      <p class="modal-issuer" id="modal-issuer"></p>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:1rem" id="modal-date"></p>
+      <a class="modal-link" id="modal-link" href="#" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View certificate
+      </a>
+    </div>
+  </div>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════
+       CERTIFICATES DATA
+       — Edit this array to add / remove your certificates.
+       — For `file`, either:
+             "certificates/aws.pdf"  (if you upload the file)
+             "https://coursera.org/verify/XXXXX"  (verification link)
+    ═══════════════════════════════════════════════════════ */
+    const CERTS = [
+  // --- BATCH 1 ---
+  {
+    id: 1,
+    title: "Python Fundamentals",
+    issuer: "Infosys Springboard",
+    date: "Oct 2024",
+    category: "tech",
+    file: "certificates/Python Fundamentals.pdf",
+    preview: "#F0FDF4",
+    icon: "🐍",
+    badge: "Course",
+    badgeBg: "#DCFCE7",
+    badgeColor: "#166534"
+  },
+  {
+    id: 2,
+    title: "Testing and Automation of Web Apps using Playwright",
+    issuer: "IIT Madras",
+    date: "May 2026",
+    category: "tech",
+    file: "certificates/23f3000843_TAWAP_certificate.pdf",
+    preview: "#EFF6FF",
+    icon: "⚙️",
+    badge: "Workshop",
+    badgeBg: "#DBEAFE",
+    badgeColor: "#1E40AF"
+  },
+  {
+    id: 3,
+    title: "Implementing Machine Learning Techniques using Numpy",
+    issuer: "IIT Madras",
+    date: "Sep 2025",
+    category: "data",
+    file: "certificates/23F3000843_workshop_MLT.pdf",
+    preview: "#FAF5FF",
+    icon: "🧠",
+    badge: "Workshop",
+    badgeBg: "#F3E8FF",
+    badgeColor: "#6B21A8"
+  },
+  {
+    id: 4,
+    title: "The Bits and Bytes of Computer Networking",
+    issuer: "Google · Coursera",
+    date: "Apr 2026",
+    category: "tech",
+    file: "certificates/CN_S24CSEU2649.pdf",
+    preview: "#FFF7E6",
+    icon: "🌐",
+    badge: "Course",
+    badgeBg: "#FEF3C7",
+    badgeColor: "#92400E"
+  },
+  {
+    id: 5,
+    title: "Data Visualization",
+    issuer: "University of Illinois · Coursera",
+    date: "Apr 2026",
+    category: "data",
+    file: "certificates/DM_S24CSEU2649_1.pdf",
+    preview: "#F8F8F6",
+    icon: "📈",
+    badge: "Course",
+    badgeBg: "#F3F4F6",
+    badgeColor: "#374151"
+  },
+  {
+    id: 6,
+    title: "Python for Time Series Data Analysis",
+    issuer: "Udemy",
+    date: "Apr 2026",
+    category: "data",
+    file: "certificates/DM_S24CSEU2649_2.pdf",
+    preview: "#FFF1F2",
+    icon: "⏱️",
+    badge: "Course",
+    badgeBg: "#FFE4E6",
+    badgeColor: "#9F1239"
+  },
+  {
+    id: 7,
+    title: "Performance Testing Professional",
+    issuer: "Infosys Springboard",
+    date: "Feb 2026",
+    category: "tech",
+    file: "certificates/DTI_Certificate.pdf",
+    preview: "#F0FDFA",
+    icon: "🚀",
+    badge: "Professional",
+    badgeBg: "#CCFBF1",
+    badgeColor: "#115E59"
+  },
+  {
+    id: 8,
+    title: "Foundational Level in Programming and Data Science",
+    issuer: "IIT Madras",
+    date: "Sep 2024",
+    category: "data",
+    file: "certificates/IITM-Foundation.pdf",
+    preview: "#EFF6FF",
+    icon: "🎓",
+    badge: "Foundation",
+    badgeBg: "#DBEAFE",
+    badgeColor: "#1E40AF"
+  },
+  {
+    id: 9,
+    title: "MATLAB Fundamentals",
+    issuer: "MathWorks",
+    date: "Oct 2024",
+    category: "data",
+    file: "certificates/matlab fundamentals.pdf",
+    preview: "#FFF7E6",
+    icon: "📐",
+    badge: "Course",
+    badgeBg: "#FEF3C7",
+    badgeColor: "#92400E"
+  },
+  {
+    id: 10,
+    title: "Introduction to Microprocessors",
+    issuer: "Arm Education · Coursera",
+    date: "Apr 2026",
+    category: "tech",
+    file: "certificates/MCA_Certificate.pdf",
+    preview: "#FAF5FF",
+    icon: "🖲️",
+    badge: "Course",
+    badgeBg: "#F3E8FF",
+    badgeColor: "#6B21A8"
+  },
+
+  // --- BATCH 2 ---
+  {
+    id: 11,
+    title: "Operating Systems and You: Becoming a Power User",
+    issuer: "Google · Coursera",
+    date: "Mar 2026",
+    category: "tech",
+    file: "certificates/OS_Certificate_S24CSEU2649.pdf",
+    preview: "#EFF6FF",
+    icon: "🖥️",
+    badge: "Course",
+    badgeBg: "#DBEAFE",
+    badgeColor: "#1E40AF"
+  },
+  {
+    id: 12,
+    title: "Data Structures and Algorithms",
+    issuer: "Infosys Springboard",
+    date: "Oct 2025",
+    category: "tech",
+    file: "certificates/S24CSEU2649_CPP.pdf",
+    preview: "#F0FDF4",
+    icon: "🗂️",
+    badge: "Course",
+    badgeBg: "#DCFCE7",
+    badgeColor: "#166534"
+  },
+  {
+    id: 13,
+    title: "CS403: Introduction to Modern Database Systems",
+    issuer: "Saylor Academy",
+    date: "Nov 2025",
+    category: "data",
+    file: "certificates/S24CSEU2649_IMS.pdf", 
+    preview: "#FAF5FF",
+    icon: "🗄️",
+    badge: "Course",
+    badgeBg: "#F3E8FF",
+    badgeColor: "#6B21A8"
+  },
+  {
+    id: 14,
+    title: "Electronic Circuits and Number System",
+    issuer: "Infosys Springboard",
+    date: "Feb 2025",
+    category: "tech",
+    file: "certificates/S24CSEU2649_InfosysCertificate-1.pdf",
+    preview: "#FFF7E6",
+    icon: "🔌",
+    badge: "Course",
+    badgeBg: "#FEF3C7",
+    badgeColor: "#92400E"
+  },
+  {
+    id: 15,
+    title: "Digital Electronics",
+    issuer: "Infosys Springboard",
+    date: "Feb 2025",
+    category: "tech",
+    file: "certificates/S24CSEU2649_InfosysCertificate-2.pdf",
+    preview: "#FFF1F2",
+    icon: "🔋",
+    badge: "Course",
+    badgeBg: "#FFE4E6",
+    badgeColor: "#9F1239"
+  },
+  {
+    id: 16,
+    title: "Introduction to Linear Algebra with MATLAB",
+    issuer: "MathWorks",
+    date: "Feb 2025",
+    category: "data",
+    file: "certificates/S24CSEU2649_Matlab_LA.pdf",
+    preview: "#F0FDFA",
+    icon: "📉",
+    badge: "Course",
+    badgeBg: "#CCFBF1",
+    badgeColor: "#115E59"
+  },
+  {
+    id: 17,
+    title: "MATLAB Programming Techniques",
+    issuer: "MathWorks",
+    date: "Feb 2025",
+    category: "tech",
+    file: "certificates/S24CSEU2649_Matlab_PT.pdf",
+    preview: "#F8F8F6",
+    icon: "⌨️",
+    badge: "Course",
+    badgeBg: "#F3F4F6",
+    badgeColor: "#374151"
+  },
+  {
+    id: 18,
+    title: "Plastic Waste and the Basel Convention",
+    issuer: "UNITAR",
+    date: "Oct 2024",
+    category: "other",
+    file: "certificates/UNITAR_Plastic_Waste.pdf", 
+    preview: "#F0FDF4",
+    icon: "♻️",
+    badge: "e-Course",
+    badgeBg: "#DCFCE7",
+    badgeColor: "#166534"
+  },
+  {
+    id: 19,
+    title: "Introduction to Symbolic Math with MATLAB",
+    issuer: "MathWorks",
+    date: "Oct 2024",
+    category: "data",
+    file: "certificates/symbolic mathematics.pdf",
+    preview: "#EFF6FF",
+    icon: "🧮",
+    badge: "Course",
+    badgeBg: "#DBEAFE",
+    badgeColor: "#1E40AF"
+  }
+];
+
+    /* ─── Render & filter ─── */
+    let currentFilter = 'all';
+
+    function render(list) {
+      const grid = document.getElementById('cert-grid');
+      const label = document.getElementById('count-label');
+      label.textContent = list.length + ' certificate' + (list.length !== 1 ? 's' : '');
+
+      if (!list.length) {
+        grid.innerHTML = '<p class="empty">No certificates in this category yet.</p>';
+        return;
+      }
+
+      const cards = list.map(c => `
+        <a class="cert-card" onclick="openModal(${c.id}); return false;" href="${c.file}" role="button">
+          <div class="cert-preview" style="background:${c.preview}">
+            <span class="cert-icon" style="font-size:40px; line-height:1">${c.icon}</span>
+            <span class="cert-badge" style="background:${c.badgeBg}; color:${c.badgeColor}">${c.badge}</span>
+          </div>
+          <div class="cert-body">
+            <div class="cert-title">${c.title}</div>
+            <div class="cert-issuer">${c.issuer}</div>
+            <div class="cert-meta">
+              <span class="cert-date">📅 ${c.date}</span>
+              <span class="cert-action">View ↗</span>
+            </div>
+          </div>
+        </a>
+      `).join('');
+
+      // Add "add certificate" placeholder at the end
+      grid.innerHTML = cards + `
+        <div class="add-card" title="Add a certificate">
+          <span style="font-size:28px; color:var(--text-muted)">+</span>
+          <span>Add a certificate</span>
+        </div>
+      `;
+    }
+
+    function filter(cat, btn) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const list = cat === 'all' ? CERTS : CERTS.filter(c => c.category === cat);
+      render(list);
+    }
+
+    /* ─── Modal ─── */
+    function openModal(id) {
+      const c = CERTS.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('modal-preview').style.background = c.preview;
+      document.getElementById('modal-preview').textContent = c.icon;
+      document.getElementById('modal-preview').style.fontSize = '52px';
+      document.getElementById('modal-title').textContent = c.title;
+      document.getElementById('modal-issuer').textContent = c.issuer;
+      document.getElementById('modal-date').textContent = 'Issued ' + c.date;
+      document.getElementById('modal-link').href = c.file;
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function closeModal(target) {
+      if (target === true || target.target === document.getElementById('modal-overlay')) {
+        document.getElementById('modal-overlay').classList.remove('open');
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal(true);
+    });
+
+    /* ─── Init ─── */
+    render(CERTS);
+  </script>
+</body>
+</html>
